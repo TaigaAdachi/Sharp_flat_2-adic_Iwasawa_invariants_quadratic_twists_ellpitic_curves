@@ -1,0 +1,33 @@
+def neron_periods(E, prec=100):
+    E = E.global_minimal_model()
+    omega1, omega2 = E.period_lattice().basis(prec=prec)
+    c_inf = E.real_components()
+
+    Omega_plus  = c_inf * abs(omega1)
+    Omega_minus = c_inf * abs(imag_part(omega2))
+
+    return Omega_plus, Omega_minus
+
+
+examples = [
+    ("E1", EllipticCurve([0, -1, 1, -10, -20]), [13, 29]),
+    ("E2", EllipticCurve([0,  1, 1,   1,   0]), [17, 97])
+]
+
+
+for name, E, twists in examples:
+    Omega_plus, Omega_minus = neron_periods(E)
+
+    for D in twists:
+        ED = E.quadratic_twist(D).global_minimal_model()
+        Omega_plus_D, Omega_minus_D = neron_periods(ED)
+
+        ratio_plus  = Omega_plus_D / Omega_plus
+        ratio_minus = Omega_minus_D / Omega_minus
+        expected    = 1 / RealField(100)(D).sqrt()
+
+        print(name + ", D =", D)
+        print("Omega_plus(E^D)  / Omega_plus(E)  =", ratio_plus)
+        print("Omega_minus(E^D) / Omega_minus(E) =", ratio_minus)
+        print("1 / sqrt(D)                       =", expected)
+        print()
