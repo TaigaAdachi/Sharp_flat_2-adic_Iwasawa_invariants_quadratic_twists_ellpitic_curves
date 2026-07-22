@@ -1,0 +1,9 @@
+load("IwInv_sage97.sage")
+
+E4 = EllipticCurve([0, 1, 1, -12, -21])
+E4_33 = E4.quadratic_twist(33).global_minimal_model()
+
+mus, lambdas = iwasawa_invariants_of_ec(E4_33, 2)
+
+print("(mu_sharp, mu_flat) =", (mus[1], mus[0]))
+print("(lambda_sharp, lambda_flat) =", (lambdas[1], lambdas[0]))
